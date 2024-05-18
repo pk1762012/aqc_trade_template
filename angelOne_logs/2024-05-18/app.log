@@ -1,0 +1,10 @@
+[E 240518 01:33:43 angelone:369] API request failed: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[E 240518 11:28:46 angelone:369] API request failed: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[E 240518 11:29:21 angelone:369] API request failed: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[E 240518 11:36:40 angelone:369] API request failed: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[E 240518 12:32:08 angelone:174] Error occurred while making a POST request to https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword. Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': 'a0:1d:48:df:52:c2', 'Accept': 'application/json', 'X-PrivateKey': 'HZfHSjFN', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'clientcode': 'ALNL1030', 'password': '2703', 'totp': <pyotp.totp.TOTP object at 0x000002371CFCA030>}, Response: Object of type TOTP is not JSON serializable
+[E 240518 14:59:01 angelone:366] API request failed: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[E 240518 14:59:53 angelone:366] API request failed: {'message': 'Entered trading symbol and symbol token is mismatch', 'errorcode': 'AB1019', 'status': False, 'data': None}
+[E 240518 15:01:44 angelone:367] API request failed: {'message': 'Entered trading symbol and symbol token is mismatch', 'errorcode': 'AB1019', 'status': False, 'data': None}
+[E 240518 15:08:35 angelone:367] API request failed: {'message': 'Entered trading symbol and symbol token is mismatch', 'errorcode': 'AB1019', 'status': False, 'data': None}
+[E 240518 15:09:07 angelone:367] API request failed: {'message': 'Failed to get symbol details', 'errorcode': 'AB1018', 'status': False, 'data': None}

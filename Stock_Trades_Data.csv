@@ -1,0 +1,10 @@
+Client_identifier,Type,Exchange,Segment,Product Type,Order type,Price,Symbol,Quantity,Disclosed Quantity,Priority,Place order trigger date
+2015ravimishra@gmail.com,SELL,NSE,CASH,DELIVERY,MARKET,0,ETF1,10,10,0,T0
+2015ravimishra@gmail.com,SELL,NSE,CASH,DELIVERY,MARKET,0,ETF2,11,11,0,T0
+2015ravimishra@gmail.com,BUY,NSE,CASH,DELIVERY,MARKET,0,ETF3,10,10,1,T0
+2015ravimishra@gmail.com,BUY,NSE,CASH,DELIVERY,MARKET,0,ETF4,5,5,2,T0
+2015ravimishra@gmail.com,BUY,NSE,CASH,DELIVERY,MARKET,0,ETF4,5,5,1,T1
+2015ravimishra@gmail.com,SELL,NSE,CASH,DELIVERY,MARKET,0,ETF1,10,10,0,T0
+2015ravimishra@gmail.com,SELL,NSE,CASH,DELIVERY,MARKET,0,ETF2,11,11,0,T0
+2015ravimishra@gmail.com,BUY,NSE,CASH,DELIVERY,MARKET,0,ETF3,10,10,1,T0
+2015ravimishra@gmail.com,BUY,NSE,CASH,DELIVERY,MARKET,0,ETF4,10,10,1,T1

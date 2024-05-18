@@ -267,7 +267,8 @@ class AngelOne(object):
 
     def _getSymbolToken(self, order):
         """Get symbol token for angel one"""
-        token = get_token_id_from_symbol(order.tradingSymbol, order.exchange)
+        formatted_symbol = self._getTradingSymbolFromOrder(order)
+        token = get_token_id_from_symbol(formatted_symbol, order.exchange)
         return str(token)
 
     def _getTradingSymbolFromOrder(self, order):
@@ -343,7 +344,7 @@ class AngelOne(object):
         params = {
             "variety": "NORMAL",
             "tradingsymbol": self._getTradingSymbolFromOrder(order),
-            "symboltoken": self._getSymbolToken(order), #script to get token?
+            "symboltoken": self._getSymbolToken(order),
             "transactiontype": self._getTransactionType(order),
             "exchange": self._getExchange(order),
             "ordertype": self._getOrderType(order),
@@ -354,6 +355,7 @@ class AngelOne(object):
             "stoploss": str(order.stopLossPrice),
             "squareoff": "0"
         }
+        print(params)
         response = self._postRequest("api.order.place", params)
         # print(response)
         if response is not None and response.get('status', False):

@@ -89,11 +89,11 @@ def get_token_id_from_symbol(symbol, exchange):
     conn = sqlite3.connect(db_filename)
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT Token FROM angelOne_scrip_data WHERE Name = ? AND Segment = ?", (symbol,exchange))
+        cursor.execute("SELECT Token FROM angelOne_scrip_data WHERE Symbol = ? AND Segment = ?", (symbol,exchange))
     except:
         download_csv_from_url()
         store_csv_to_sqlite()
-        cursor.execute("SELECT Token FROM angelOne_scrip_data WHERE Name = ? AND Segment = ?", (symbol,exchange))
+        cursor.execute("SELECT Token FROM angelOne_scrip_data WHERE Symbol = ? AND Segment = ?", (symbol,exchange))
     row = cursor.fetchone()
     conn.close()
     if row:
@@ -111,4 +111,4 @@ def get_token_id_from_symbol(symbol, exchange):
         else:
             return None
 
-# print(get_token_id_from_symbol('SBIN', 'NSE'))
+#print(get_token_id_from_symbol('IRFC-EQ', 'NSE'))
