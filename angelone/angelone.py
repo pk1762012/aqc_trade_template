@@ -310,6 +310,26 @@ class AngelOne(object):
         else:
             return loginResponse
 
+
+    def generateSession_nopw(self, client_code, access_token, refresh_token, feed_token):
+
+        jwtToken=access_token
+        self.access_token = jwtToken
+        refreshToken = refresh_token
+        feedToken = feed_token
+        self.refresh_token = refreshToken
+        self.feed_token = feedToken
+        user = self.getProfile(refreshToken)
+
+        id = client_code
+        self.userId = id
+        user['data']['jwtToken'] = "Bearer " + jwtToken
+        user['data']['refreshToken'] = refreshToken
+        user['data']['feedToken'] = feedToken
+
+        return user
+
+
     def terminateSession(self, clientCode):
         logoutResponse = self._postRequest("api.logout", {"clientcode": clientCode})
         return logoutResponse
