@@ -37,6 +37,8 @@ class AngelOne(object):
         "api.trade.book": "/rest/secure/angelbroking/order/v1/getTradeBook",
         "api.holding": "/rest/secure/angelbroking/portfolio/v1/getHolding",
         "api.position": "/rest/secure/angelbroking/order/v1/getPosition",
+        "api.funds": "/rest/secure/angelbroking/user/v1/getRMS",
+
     }
 
     #Fetching local and public IP addresses and MAC address of the device
@@ -197,15 +199,18 @@ class AngelOne(object):
     def _deleteRequest(self, route, params=None):
         """Alias for sending a DELETE request."""
         return self._request(route, "DELETE", params)
+    
     def _putRequest(self, route, params=None):
         """Alias for sending a PUT request."""
         return self._request(route, "PUT", params)
+    
     def _postRequest(self, route, params=None):
         """Alias for sending a POST request."""
         return self._request(route, "POST", params)
     def _getRequest(self, route, params=None):
         """Alias for sending a GET request."""
         return self._request(route, "GET", params)
+
 
     def _getVariety(self, order):
         """Get order variety for angel one
@@ -409,4 +414,8 @@ class AngelOne(object):
 
     def getPosition(self):
         response = self._getRequest("api.position")
+        return response
+    
+    def getFunds(self):
+        response = self._getRequest("api.funds")
         return response
