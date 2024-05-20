@@ -149,10 +149,16 @@ class AngelOne(object):
         #Custom Headers
         headers = self.requestHeaders()
 
+        # if self.access_token:
+        #     #set authorisation header
+        #     auth_header = self.access_token
+        #     headers["Authorization"] = "Bearer {}".format(auth_header)
+
         if self.access_token:
             #set authorisation header
-            auth_header = self.access_token
-            headers["Authorization"] = "Bearer {}".format(auth_header)
+            if not self.access_token.startswith("Bearer "):
+                self.access_token = "Bearer " + self.access_token
+            headers["Authorization"] = self.access_token
 
         if self.debug:
             log.debug("Request: {method} {url} {params} {headers}".format(method=method, url=url, params=params, headers=headers))
