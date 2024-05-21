@@ -25,7 +25,7 @@ class TradingLogic:
                 continue  
             status = order["orderstatus"].lower()
             reason = order.get("text", "No specific error provided")
-            if "success" in status:
+            if "complete" in status:
                 successful_trades.append(symbol)
             else:
                 failed_trades.append(f"{symbol} due to {reason}")
@@ -60,11 +60,16 @@ class TradingLogic:
         return {"status": "Not found", "error_message": "No matching order found"}
 
     def process_trades(self, trades):
-        
+        print(f"from buy_sell{trades}")
+        if trades is None:
+            return {"error": "No trades provided"}, 400
+
         funds_before = self.available_funds()
+        if funds_before is None:
+            return {"error": "Failed to retrieve funds information"}, 500
+
         trades.sort(key=lambda x: x['Priority'])
         trades_by_user = defaultdict(list)
-
         for trade in trades:
             trades_by_user[trade['user_email']].append(trade)
 
@@ -74,11 +79,11 @@ class TradingLogic:
                 sell_trades = [trade for trade in user_trades if trade['Type'] == 'SELL']
                 sold_successfully, not_sold_stocks = self.process_sell_orders(sell_trades)
 
-                if len(not_sold_stocks) == len(sell_trades):
+                if not sold_successfully:
                     for stock in not_sold_stocks:
                         failure_result = self.trigger_failure_flow(user_email, sell_trades, stock['error'])
                         results.append(failure_result)
-                    continue 
+                    continue
 
                 buy_trades = [trade for trade in user_trades if trade['Type'] == 'BUY']
                 bought_successfully, not_bought_stocks = self.process_buy_orders(buy_trades)
@@ -101,7 +106,7 @@ class TradingLogic:
                 "order_book": reformat_result
             }
         except Exception as error:
-            return {"error": str(error)}, 500
+            return {"error from buy_sell": str(error)}, 500
             
         
     def process_sell_orders(self, trades):
