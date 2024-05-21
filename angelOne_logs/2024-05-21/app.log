@@ -1,0 +1,2 @@
+[E 240521 13:10:37 angelone:379] API request failed: {'message': 'Entered trading symbol and symbol token is mismatch', 'errorcode': 'AB1019', 'status': False, 'data': None}
+[E 240521 13:14:04 angelone:379] API request failed: {'message': 'Entered trading symbol and symbol token is mismatch', 'errorcode': 'AB1019', 'status': False, 'data': None}

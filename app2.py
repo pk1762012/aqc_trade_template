@@ -88,15 +88,21 @@ def get_profile():
 @app.route('/place-order', methods=['POST'])
 def place_order():
     data = request.json
-    jwt_token = data.get('jwtToken')
+    auth_data = data.get('auth', {})
+    jwt_token = auth_data.get('jwtToken')
     if jwt_token:
         try:
-            apiKey = data.get('apiKey')
+            apiKey = auth_data.get('apiKey')
             angel = AngelOne(api_key=apiKey, access_token=jwt_token)
-            order_details = request.json
-            order = Order(**order_details)
+            order_data = data.get('order', {})
+            
+            order = Order(**order_data)
             result = angel.placeOrder(order)
-            return jsonify(result)
+            if result is None or not result.get('status', True): 
+                error_message = result.get('message', 'Unknown error')
+                error_code = result.get('errorcode', 'Unknown error code')
+                return jsonify({"error": error_message, "errorcode": error_code}), 400
+            return jsonify(result)  
         except Exception as error:
             return jsonify({"error": str(error)}), 500
     else:
@@ -106,14 +112,19 @@ def place_order():
 @app.route('/modify-order', methods=['POST'])
 def modify_order():
     data = request.json
-    jwt_token = data.get('jwtToken')
+    auth_data = data.get('auth', {})
+    jwt_token = auth_data.get('jwtToken')
     if jwt_token:
         try:
-            apiKey = data.get('apiKey')
+            apiKey = auth_data.get('apiKey')
             angel = AngelOne(api_key=apiKey, access_token=jwt_token)
-            order_details = data.get('order')
-            order_id = data.get('orderId')
-            order = Order(**order_details)
+            order_data = data.get('order', {})
+            order_id = order_data.pop('orderId', None)  
+
+            if not order_id:
+                return jsonify({"error": "Order ID is missing"}), 400
+
+            order = Order(**order_data)
             result = angel.modifyOrder(order, order_id)
             return jsonify(result)
         except Exception as error:
@@ -121,22 +132,30 @@ def modify_order():
     else:
         return jsonify({"error": "Authorization token is missing"}), 401
 
+
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     data = request.json
-    jwt_token = data.get('jwtToken')
+    auth_data = data.get('auth', {})
+    jwt_token = auth_data.get('jwtToken')
     if jwt_token:
         try:
-            apiKey = data.get('apiKey')
+            apiKey = auth_data.get('apiKey')
             angel = AngelOne(api_key=apiKey, access_token=jwt_token)
-            variety = data.get('variety')
-            order_id = data.get('orderId')
+            order_data = data.get('order', {})
+            variety = order_data.get('variety')
+            order_id = order_data.get('orderId')
+
+            if not order_id:
+                return jsonify({"error": "Order ID is missing"}), 400
+
             result = angel.cancelOrder(variety, order_id)
             return jsonify(result)
         except Exception as error:
             return jsonify({"error": str(error)}), 500
     else:
         return jsonify({"error": "Authorization token is missing"}), 401
+
 
 @app.route('/order-book', methods=['GET'])
 def get_order_book():
