@@ -250,5 +250,9 @@ def process_trades_route():
     else:
         return jsonify({"error": "Authorization token is missing"}), 401
 
+@app.route('/', methods=['GET'])
+def server_running():
+    return 'Server Active and running'
+
 if __name__ == '__main__':
     app.run(debug=True)
