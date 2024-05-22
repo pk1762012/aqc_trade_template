@@ -16,7 +16,7 @@ class TradingLogic:
 
     def reformat_order_book(self, orders, trades):
         symbols_in_trades = {trade["Symbol"] for trade in trades}  
-        successful_trades = []
+        successful_trades = set()
         failed_trades = []
 
         for order in orders.get("data", []):
@@ -26,7 +26,7 @@ class TradingLogic:
             status = order["orderstatus"].lower()
             reason = order.get("text", "No specific error provided")
             if "complete" in status:
-                successful_trades.append(symbol)
+                successful_trades.add(symbol) 
             else:
                 failed_trades.append(f"{symbol} due to {reason}")
 
