@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 from angelone.angelone import AngelOne, Order 
 from buy_sell_angelone import TradingLogic
+from flask_cors import CORS
 import pyotp
 
 app = Flask(__name__)
-
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/generate-session', methods=['POST'])
 def login():
