@@ -38,6 +38,7 @@ class AngelOne(object):
         "api.holding": "/rest/secure/angelbroking/portfolio/v1/getHolding",
         "api.position": "/rest/secure/angelbroking/order/v1/getPosition",
         "api.funds": "/rest/secure/angelbroking/user/v1/getRMS",
+        "api.order.status": "/rest/secure/angelbroking/order/v1/details/{uniqueorderid}"
 
     }
 
@@ -425,3 +426,8 @@ class AngelOne(object):
     def getFunds(self):
         response = self._getRequest("api.funds")
         return response
+    
+    def getOrderStatus(self, uniqueorderid):
+        response = self._getRequest("api.order.status", {"uniqueorderid": uniqueorderid})
+        return response
+    

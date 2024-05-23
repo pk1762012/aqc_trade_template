@@ -60,11 +60,9 @@ class TradingLogic:
         return {"status": "Not found", "error_message": "No matching order found"}
 
     def process_trades(self, trades):
-        print(f"from buy_sell{trades}")
         if trades is None:
             return {"error": "No trades provided"}, 400
 
-        funds_before = self.available_funds()
         if funds_before is None:
             return {"error": "Failed to retrieve funds information"}, 500
 
@@ -94,14 +92,11 @@ class TradingLogic:
                     success_result = self.trigger_success_flow(user_email, user_trades)
                     results.append(success_result)
 
-            funds_after = self.available_funds()
             orders_after = self.orders()
             reformat_result = self.reformat_order_book(orders_after, trades)
 
             return {
                 "results": results,
-                "funds_before_trade": funds_before,
-                "funds_after_trade": funds_after,
                 "order_book": reformat_result
             }
         except Exception as error:
