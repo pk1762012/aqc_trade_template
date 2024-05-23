@@ -7,9 +7,6 @@ class TradingLogic:
         self.access_token = access_token
         angel_one = AngelOne(api_key=api_key, access_token=access_token)
         self.angel_one = angel_one
-        
-    def available_funds(self):
-        return self.angel_one.getFunds()
     
     def orders(self):
         return self.angel_one.getOrderBook()
@@ -62,9 +59,6 @@ class TradingLogic:
     def process_trades(self, trades):
         if trades is None:
             return {"error": "No trades provided"}, 400
-
-        if funds_before is None:
-            return {"error": "Failed to retrieve funds information"}, 500
 
         results = []
         trades_by_user = defaultdict(list)
