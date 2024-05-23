@@ -68,24 +68,23 @@ class TradingLogic:
         if funds_before is None:
             return {"error": "Failed to retrieve funds information"}, 500
 
-        trades.sort(key=lambda x: x['Priority'])
+        results = []
         trades_by_user = defaultdict(list)
         for trade in trades:
             trades_by_user[trade['user_email']].append(trade)
 
-        results = []
         try:
             for user_email, user_trades in trades_by_user.items():
-                sell_trades = [trade for trade in user_trades if trade['Type'] == 'SELL']
-                sold_successfully, not_sold_stocks = self.process_sell_orders(sell_trades)
+                sell_trades = sorted((trade for trade in user_trades if trade['Type'] == 'SELL'), key=lambda x: x.get('Priority', float('inf')))
+                buy_trades = sorted((trade for trade in user_trades if trade['Type'] == 'BUY'), key=lambda x: x.get('Priority', float('inf')))
 
+                sold_successfully, not_sold_stocks = self.process_sell_orders(sell_trades)
                 if not sold_successfully:
                     for stock in not_sold_stocks:
                         failure_result = self.trigger_failure_flow(user_email, sell_trades, stock['error'])
                         results.append(failure_result)
-                    continue
+                    continue 
 
-                buy_trades = [trade for trade in user_trades if trade['Type'] == 'BUY']
                 bought_successfully, not_bought_stocks = self.process_buy_orders(buy_trades)
                 if not bought_successfully:
                     for stock in not_bought_stocks:
