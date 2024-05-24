@@ -19,7 +19,7 @@ def login():
         result = angel.generateSession(client_code, password, totp)
         return jsonify(result)
     except Exception as error:
-        return jsonify({"error": str(error)}), 500
+        return jsonify({"error@route": str(error)}), 500
 
 @app.route('/terminate-session', methods=['POST'])
 def logout():
@@ -33,9 +33,9 @@ def logout():
             result = angel.terminateSession(client_code)
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
     
 
 @app.route('/generate-token', methods=['POST'])
@@ -50,9 +50,9 @@ def generate_token():
             result = angel.generateToken(refresh_token)
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 
 @app.route('/renew-token', methods=['POST'])
@@ -66,9 +66,9 @@ def renew_token():
             result = angel.renewAccessToken()
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
     
 @app.route('/profile', methods=['GET'])
 def get_profile():
@@ -82,9 +82,9 @@ def get_profile():
             result = angel.getProfile(refresh_token)
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 @app.route('/place-order', methods=['POST'])
 def place_order():
@@ -105,9 +105,9 @@ def place_order():
                 return jsonify({"error": error_message, "errorcode": error_code}), 400
             return jsonify(result)  
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 
 @app.route('/modify-order', methods=['POST'])
@@ -123,15 +123,15 @@ def modify_order():
             order_id = order_data.pop('orderId', None)  
 
             if not order_id:
-                return jsonify({"error": "Order ID is missing"}), 400
+                return jsonify({"error@route": "Order ID is missing"}), 400
 
             order = Order(**order_data)
             result = angel.modifyOrder(order, order_id)
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 
 @app.route('/cancel-order', methods=['POST'])
@@ -148,14 +148,14 @@ def cancel_order():
             order_id = order_data.get('orderId')
 
             if not order_id:
-                return jsonify({"error": "Order ID is missing"}), 400
+                return jsonify({"error@route": "Order ID is missing"}), 400
 
             result = angel.cancelOrder(variety, order_id)
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 
 @app.route('/order-book', methods=['GET'])
@@ -169,9 +169,9 @@ def get_order_book():
             result = angel.getOrderBook()
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
     
 @app.route('/order-statuses', methods=['GET'])
 def get_order_status():
@@ -218,9 +218,9 @@ def get_order_status():
 
             return jsonify(results)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 
 @app.route('/trade-book', methods=['GET'])
@@ -234,9 +234,9 @@ def get_trade_book():
             result = angel.getTradeBook()
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 @app.route('/holdings', methods=['GET'])
 def get_holdings():
@@ -249,9 +249,9 @@ def get_holdings():
             result = angel.getHolding()
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 @app.route('/positions', methods=['GET'])
 def get_positions():
@@ -264,9 +264,9 @@ def get_positions():
             result = angel.getPosition()
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
     
 
 @app.route('/funds', methods=['GET'])
@@ -280,9 +280,9 @@ def get_funds():
             result = angel.getFunds()
             return jsonify(result)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
     
 # buy_sell
@@ -297,9 +297,9 @@ def process_trades_route():
             results = trading_logic.process_trades(data['trades'])
             return jsonify(results)
         except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            return jsonify({"error@route": str(error)}), 500
     else:
-        return jsonify({"error": "Authorization token is missing"}), 401
+        return jsonify({"error@route": "Authorization token is missing"}), 401
 
 @app.route('/', methods=['GET'])
 def server_running():

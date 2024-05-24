@@ -33,28 +33,48 @@ class TradingLogic:
 
         results = []
         for trade in trades:
-            trade_details = {
-                "stock_symbol": trade["Symbol"],
-                "Type": trade["Type"],
-                "stock_user_qty": trade["Quantity"],
-                "stock_user_price": trade["Price"],
-                "advice_status": self.extract_trade_response(trade["Symbol"], orders)
-            }
-            results.append(trade_details)
-
+            trade_symbol = trade["Symbol"]
+            matching_order = next((order for order in orders.get("data", []) if trade_symbol == order["tradingsymbol"].split("-")[0]), None)
+            if matching_order: 
+                simplified_order_details = {
+                    "averageprice": matching_order.get("averageprice", ""),
+                    "orderupdatetime": matching_order.get("exchorderupdatetime", ""),
+                    "filledshares": matching_order.get("filledshares", ""),
+                    "unfilledshares": matching_order.get("unfilledshares", ""),
+                    "lotsize": matching_order.get("lotsize", ""),
+                    "optiontype": matching_order.get("optiontype", ""),
+                    "instrumenttype": matching_order.get("instrumenttype", ""),
+                    "orderid" : matching_order.get("orderid", ""),
+                    "orderstatus": matching_order.get("orderstatus", ""),
+                    "ordertype": matching_order.get("ordertype", ""),
+                    "tradingsymbol": matching_order.get("tradingsymbol", ""),
+                    "transactiontype": matching_order.get("transactiontype", ""),
+                    "delivery_intraday": matching_order.get("producttype", "")
+                }
+                trade_details = {
+                    "advice_status": order.get("orderstatus", "Unknown"),
+                    "stock_symbol": trade_symbol,
+                    "Type": trade["Type"],
+                    "stock_user_qty": trade["Quantity"],
+                    "stock_user_price": trade["Price"],
+                    "order_details": simplified_order_details              
+                }
+                results.append(trade_details)
+            else:
+                trade_details = {
+                    "advice_status": "No matching order found",
+                    "stock_symbol": trade_symbol,
+                    "Type": trade["Type"],
+                    "stock_user_qty": trade["Quantity"],
+                    "stock_user_price": trade["Price"],
+                    "order_details": None
+                }
+                results.append(trade_details) 
+                           
         return {
             "final_message": final_message,
             "trade_details": results
         }
-
-    def extract_trade_response(self, symbol, orders):
-        for order in orders.get("data", []):
-            if symbol in order["tradingsymbol"].split("-")[0]:
-                return {
-                    "order_details": order,
-                    "status": order.get("orderstatus", "Unknown"),
-                }
-        return {"status": "Not found", "error_message": "No matching order found"}
 
     def process_trades(self, trades):
         if trades is None:
@@ -115,9 +135,10 @@ class TradingLogic:
                 )
                 order_result = self.angel_one.placeOrder(order)
                 if not order_result or 'status' not in order_result or not order_result['status']:
-                    not_sold_stocks.append({"trading_symbol": trade['Symbol'], "error": order_result.get('error', 'Unknown error')})
+                    not_sold_stocks.append({"trading_symbol": trade['Symbol'], "error_process_sell": order_result.get('error', 'Unknown error')})
             except Exception as e:
-                not_sold_stocks.append({"trading_symbol": trade['Symbol'], "error": str(e)})
+                error_message = f"while processing sell order, there is an issue with payload OR processing payload info OR it is past trading hours - {str(e)}"
+                not_sold_stocks.append({"trading_symbol": trade['Symbol'], "error": error_message})
         if not_sold_stocks:
             return False, not_sold_stocks
         return True, []
@@ -140,9 +161,10 @@ class TradingLogic:
                 )
                 order_result = self.angel_one.placeOrder(order)
                 if not order_result or 'status' not in order_result or not order_result['status']:
-                    not_bought_stocks.append({"trading_symbol": trade['Symbol'], "error": order_result.get('error', 'Unknown error')})
+                    not_bought_stocks.append({"trading_symbol": trade['Symbol'], "error_process_buy": order_result.get('error', 'Unknown error')})
             except Exception as e:
-                not_bought_stocks.append({"trading_symbol": trade['Symbol'], "error": str(e)})
+                error_message = f"while processing buy order, there is an issue with payload OR processing payload info OR it is past trading hours - {str(e)}"
+                not_bought_stocks.append({"trading_symbol": trade['Symbol'], "error": error_message})
         if not_bought_stocks:
             return False, not_bought_stocks
         return True, []
