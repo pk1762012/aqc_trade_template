@@ -173,7 +173,7 @@ def get_order_book():
     else:
         return jsonify({"error": "Authorization token is missing"}), 401
     
-@app.route('/single-order-status', methods=['GET'])
+@app.route('/order-statuses', methods=['GET'])
 def get_order_status():
     data = request.json
     jwt_token = data.get('jwtToken')
@@ -181,11 +181,42 @@ def get_order_status():
         try:
             apiKey = data.get('apiKey')
             angel = AngelOne(api_key=apiKey, access_token=jwt_token)
-            uniqueorderid = data.get('uniqueorderid')
-            if not uniqueorderid:
-                return jsonify({"error": "Order ID is missing"}), 400
-            result = angel.getOrderStatus(uniqueorderid)
-            return jsonify(result)
+            uniqueorderids = data.get('uniqueorderids')
+            if not uniqueorderids and not isinstance(uniqueorderids, list):
+                return jsonify({"error": "Order IDs are missing or not in a list format"}), 400
+            
+            results = {}
+            for uniqueorderid in uniqueorderids:
+                order_response = angel.getOrderStatus(uniqueorderid)
+
+                if order_response['data'] is None:
+                    results[uniqueorderid] = {
+                        "errorcode": order_response.get("errorcode", ""),
+                        "message": order_response.get("message", "Order details not found."),
+                        "status": order_response.get("status", False)
+                    }
+                    continue
+
+                order_details = order_response['data']
+                simplified_order_details = {
+                    "averageprice": order_details.get("averageprice", ""),
+                    "orderupdatetime": order_details.get("exchorderupdatetime", ""),
+                    "filledshares": order_details.get("filledshares", ""),
+                    "unfilledshares": order_details.get("unfilledshares", ""),
+                    "lotsize": order_details.get("lotsize", ""),
+                    "optiontype": order_details.get("optiontype", ""),
+                    "instrumenttype": order_details.get("instrumenttype", ""),
+                    "orderid" : order_details.get("orderid", ""),
+                    "orderstatus": order_details.get("orderstatus", ""),
+                    "ordertype": order_details.get("ordertype", ""),
+                    "tradingsymbol": order_details.get("tradingsymbol", ""),
+                    "transactiontype": order_details.get("transactiontype", ""),
+                    "delivery_intraday": order_details.get("producttype", "")
+                }
+
+                results[uniqueorderid] = simplified_order_details
+
+            return jsonify(results)
         except Exception as error:
             return jsonify({"error": str(error)}), 500
     else:
