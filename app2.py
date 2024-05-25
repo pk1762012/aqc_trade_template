@@ -172,7 +172,25 @@ def get_order_book():
             return jsonify({"error@route": str(error)}), 500
     else:
         return jsonify({"error@route": "Authorization token is missing"}), 401
-    
+
+@app.route('/single-order-status', methods=['GET'])
+def get_order_status():
+    data = request.json
+    jwt_token = data.get('jwtToken')
+    if jwt_token:
+        try:
+            apiKey = data.get('apiKey')
+            angel = AngelOne(api_key=apiKey, access_token=jwt_token)
+            uniqueorderid = data.get('uniqueorderid')
+            if not uniqueorderid:
+                return jsonify({"error": "Order ID is missing"}), 400
+            result = angel.getOrderStatus(uniqueorderid)
+            return jsonify(result)
+        except Exception as error:
+            return jsonify({"error": str(error)}), 500
+    else:
+        return jsonify({"error@route": "Authorization token is missing"}), 401
+
 @app.route('/order-statuses', methods=['GET'])
 def get_order_status():
     data = request.json
